@@ -1,39 +1,97 @@
-import mongoose, { type Document } from "mongoose";
+import mongoose, { type Document, type Types } from "mongoose";
 
-interface IUser extends Document {
+interface ISubscription extends Document {
   name: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  price: number;
+  currency: string;
+  frequency: string;
+  category: string;
+  paymentMethod: string;
+  status: string;
+  startDate: Date;
+  renewalDate: Date;
+  user: Types.ObjectId;
 }
 
-const userSchema = new mongoose.Schema<IUser>(
+const subscriptionSchema = new mongoose.Schema<ISubscription>(
   {
     name: {
       type: String,
-      required: [true, "User name is required"],
+      required: [true, "Subscription name is required"],
       trim: true,
       minLength: 2,
-      maxLength: 50,
+      maxLength: 100,
     },
-    email: {
+    price: {
+      type: Number,
+      required: [true, "Subscription price is required"],
+      min: [0, "Price must be greater then 0"],
+    },
+    currency: {
       type: String,
-      required: [true, "User e-mail is required"],
-      unique: true,
+      enum: ["USD", "EUR", "BRL"],
+      default: "BRL",
+    },
+    frequency: {
+      type: String,
+      enum: ["Monthly", "Quarterly", "Semiannual", "Yearly"],
+      required: true,
+    },
+    category: {
+      type: String,
+      enum: [
+        "Sports",
+        "News",
+        "Entertainment",
+        "Lifestyle",
+        "Technology",
+        "Finance",
+        "Politics",
+        "others",
+      ],
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
       trim: true,
-      lowercase: true,
-      match: [/\S+@\S+\.\S+/, "Please, fill a valid e-mail address"],
+      required: true,
     },
-    password: {
+    status: {
       type: String,
-      required: [true, "User password is required"],
-      minLength: 6,
+      enum: ["Active", "Canceled", "Expired"],
+      default: "Active",
+    },
+    startDate: {
+      type: Date,
+      required: true,
+      validate: {
+        validator: (value) => value <= new Date(),
+        message: "Start date must be in the past",
+      },
+    },
+    renewalDate: {
+      type: Date,
+      required: true,
+      validate: {
+        validator: function (value: Date) {
+          return value > (this as unknown as ISubscription).startDate;
+        },
+        message: "Renewal date must be after the start date",
+      },
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
     },
   },
   { timestamps: true },
 );
 
-const User = mongoose.model<IUser>("User", userSchema);
+const Subscription = mongoose.model<ISubscription>(
+  "Subscription",
+  subscriptionSchema,
+);
 
-export default User;
+export default Subscription;
