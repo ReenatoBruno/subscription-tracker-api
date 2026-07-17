@@ -1,11 +1,13 @@
 import type { HydratedDocument } from "mongoose";
 import type { User } from "../models/user.model.js";
-import type { SignUpResponseDTO } from "../schemas/auth.schema.js";
+import type { UserResponseDTO } from "../schemas/user.schema.js";
 
-export function toSignUpResponse(user: HydratedDocument<User>): SignUpResponseDTO {
+export function toUserResponse(user: HydratedDocument<User>): UserResponseDTO {
   return {
     id: user._id.toString(),
     name: user.name,
     email: user.email,
+    role: user.role,
+    isActive: user.isActive,
   };
 }
