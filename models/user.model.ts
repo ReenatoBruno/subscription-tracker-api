@@ -1,4 +1,5 @@
 import mongoose, { type Document } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 import { toTitleCase } from "../utils/string.js";
 
 export interface User extends Document {
@@ -19,7 +20,7 @@ const userSchema = new mongoose.Schema<User>(
       required: false,
       unique: true,
       trim: true,
-      match: [/^\d{11}$/, "CPF must contain exactly 11 digits"]
+      match: [/^\d{11}$/, "CPF must contain exactly 11 digits"],
     },
     name: {
       type: String,
@@ -43,21 +44,23 @@ const userSchema = new mongoose.Schema<User>(
       required: [true, "User password is required"],
       minLength: 60,
       maxLength: 60,
-      select: false
+      select: false,
     },
     role: {
       type: String,
       enum: ["user", "admin"],
-      default:"user"
+      default: "user",
     },
     isActive: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const User = mongoose.model<User>("User", userSchema);
+userSchema.plugin(mongoosePaginate);
+
+const User = mongoose.model<User, mongoose.PaginateModel<User>>("User", userSchema);
 
 export default User;
