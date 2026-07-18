@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema<User>(
       type: String,
       required: false,
       unique: true,
+      sparse: true,
       trim: true,
       match: [/^\d{11}$/, "CPF must contain exactly 11 digits"],
     },
