@@ -62,3 +62,20 @@ export const updateUser = async (id: string, data: UpdateUserRequestDTO) => {
 
   return toUserResponse(user);
 };
+
+export const deactivateUser = async (id: string) => {
+
+  const user = await findUserById(id);
+
+  if (!user.isActive) {
+    const error: CustomError = new Error("User is already inactive");
+    error.statusCode = 409;
+    throw error;
+  }
+
+  user.isActive = false;
+
+  await user.save();
+
+  return toUserResponse(user);
+};
