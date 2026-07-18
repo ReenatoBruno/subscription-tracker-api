@@ -7,7 +7,6 @@ export interface CustomError extends Error {
   errors?: Record<string, { message: string }>;
 }
 
-
 const errorMiddleware = (
   err: Error | CustomError | ZodError,
   req: Request,
