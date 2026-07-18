@@ -1,26 +1,14 @@
 import { Router, type Router as RouterType } from "express";
-import type { Request, Response } from "express";
+import { getUser, listUsers, patchUser, softDeleteUser } from "../controllers/user.controller.js";
 
 const userRouter: RouterType = Router();
 
-userRouter.get("/", (req: Request, res: Response) =>
-  res.send({ title: "Get all users" }),
-);
+userRouter.get("/", listUsers);
 
-userRouter.get("/:id", (req: Request, res: Response) =>
-  res.send({ title: "Get user details" }),
-);
+userRouter.get("/:id", getUser);
 
-userRouter.post("/", (req: Request, res: Response) =>
-  res.send({ title: "Create new users" }),
-);
+userRouter.patch("/:id", patchUser);
 
-userRouter.put("/:id", (req: Request, res: Response) =>
-  res.send({ title: "Update users" }),
-);
-
-userRouter.delete("/:id", (req: Request, res: Response) =>
-  res.send({ title: "Delete users" }),
-);
+userRouter.delete("/:id", softDeleteUser);
 
 export default userRouter;
