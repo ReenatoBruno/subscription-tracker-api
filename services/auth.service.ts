@@ -36,23 +36,23 @@ export const signUpUser = async (data: SignUpRequestDTO) => {
 
     const token = jwt.sign(
       { userId: newUser._id },
-      JWT_SECRET as string,
+      JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
 
     await session.commitTransaction();
-    session.endSession();
+    await session.endSession();
 
     return { user: toSignUpResponse(newUser), token };
 
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
+    await session.endSession();
 
     throw error;
   }
 };
 
-export const signIn = async (req: Request, res: Response, next: NextFunction) => {}
+//export const signIn = async (req: Request, res: Response, next: NextFunction) => {}
 
-export const signOut = async (req: Request, res: Response, next: NextFunction) => {}
+//export const signOut = async (req: Request, res: Response, next: NextFunction) => {}
