@@ -39,7 +39,11 @@ export const updateUserSchema = z.object({
     z.email("Invalid email")
       .max(255, "E-mail must be at most 255 characters")
       .optional(),
-});
+}).refine(
+  (data) => Object.keys(data).length > 0,
+  { message: "At least one field must be provided" }
+);
+
 export type UpdateUserRequestDTO = z.infer<typeof updateUserSchema>;
 
 export interface UserResponseDTO {
