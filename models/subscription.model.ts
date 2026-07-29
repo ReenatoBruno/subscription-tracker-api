@@ -1,6 +1,6 @@
 import mongoose, { type Document, type Types } from "mongoose";
 
-interface ISubscription extends Document {
+interface Subscription extends Document {
   name: string;
   price: number;
   currency: "USD" | "EUR" | "BRL";
@@ -21,7 +21,7 @@ interface ISubscription extends Document {
   user: Types.ObjectId;
 }
 
-const subscriptionSchema = new mongoose.Schema<ISubscription>(
+const subscriptionSchema = new mongoose.Schema<Subscription>(
   {
     name: {
       type: String,
@@ -82,7 +82,7 @@ const subscriptionSchema = new mongoose.Schema<ISubscription>(
       required: true,
       validate: {
         validator: function (value: Date) {
-          return value > (this as unknown as ISubscription).startDate;
+          return value > (this as unknown as Subscription).startDate;
         },
         message: "Renewal date must be after the start date",
       },
@@ -99,7 +99,7 @@ const subscriptionSchema = new mongoose.Schema<ISubscription>(
 
 subscriptionSchema.pre("save", async function () {
   if (!this.renewalDate) {
-    const renewalPeriods: { [key in ISubscription["frequency"]]: number } = {
+    const renewalPeriods: { [key in Subscription["frequency"]]: number } = {
       Monthly: 30,
       Quarterly: 90,
       Semiannual: 180,
@@ -116,7 +116,7 @@ subscriptionSchema.pre("save", async function () {
   }
 });
 
-const Subscription = mongoose.model<ISubscription>(
+const Subscription = mongoose.model<Subscription>(
   "Subscription",
   subscriptionSchema,
 );
