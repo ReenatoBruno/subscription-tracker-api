@@ -24,6 +24,10 @@ export const getUserById = async (id: string) => {
 
 export const getAllUsers = async (query: ListUsersQueryDTO) => {
 
+  // if (currentUser.role !== "admin") {
+    //return { userName: currentUser.userName }; // ← USER NÃO escolhe nada, ponto final
+    //}
+
   const filter: Record<string, unknown> = {};
   if (query.role) filter.role = query.role;
   if (query.isActive !== undefined) filter.isActive = query.isActive;
