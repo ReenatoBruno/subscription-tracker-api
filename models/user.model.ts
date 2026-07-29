@@ -3,14 +3,14 @@ import mongoosePaginate from "mongoose-paginate-v2";
 import { toTitleCase } from "../utils/string.js";
 
 export interface User extends Document {
-  cpf: string;
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+    cpf: string;
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const userSchema = new mongoose.Schema<User>(
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema<User>(
       type: String,
       required: [true, "User name is required"],
       trim: true,
-      minLength: 2,
+      minLength: 3,
       maxLength: 50,
       set: toTitleCase,
     },
